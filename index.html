@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Writing Assessment: My Daily Routine</title>
     <style>
-        /* Estilos centrados en el estudiante - Minimalismo y Claridad */
         :root {
             --primary-blue: #2980b9;
             --success-green: #27ae60;
@@ -92,7 +91,6 @@
             box-shadow: 0 0 8px rgba(41, 128, 185, 0.2);
         }
 
-        /* Contador Dinámico sobre el Box */
         .word-counter {
             position: absolute;
             bottom: 15px;
@@ -163,8 +161,8 @@
             <strong>📝 Instructions:</strong>
             <ul>
                 <li>Write 5–6 sentences.</li>
-                <li>Range: <strong>50 - 60 words</strong>.</li>
-                <li>Use: <em> and, also, moreover, in addition, but, because.</em></li>
+                <li>Range: <strong>40 - 60 words</strong>.</li>
+                <li>Use: <em>and, also, but, because.</em></li>
             </ul>
         </div>
         <div class="box vocabulary">
@@ -172,8 +170,8 @@
             Morning, afternoon, night, lunch, school, home, study, watch TV, happy, fun.
         </div>
         <div class="box model">
-            <strong>📌 Model (Do not copy!):</strong><br>
-            <em>I wake up at 3:00 am and I go to Mars in the morning. I eat blue screws for lunch, also In the afternoon, I play with my pet dragon. Moreover, I like dragons because they breathe fire. Finally, I go to bed at noon.</em>
+            <strong>📌 Model (Absurd Example):</strong><br>
+            <em>I wake up at 3:00 am and I go to Mars in the morning. I eat blue screws for lunch, also in the afternoon, I play with my pet dragon. Moreover, I like dragons because they breathe fire. Finally, I go to bed at noon.</em>
         </div>
     </div>
 
@@ -192,15 +190,14 @@
     const counter = document.getElementById('counter');
     const feedbackArea = document.getElementById('feedbackArea');
 
-    // Lógica del contador en tiempo real
+    // Lógica del contador actualizada a 40-60
     writingBox.addEventListener('input', () => {
         const text = writingBox.value.trim();
         const words = text ? text.split(/\s+/).length : 0;
         
         counter.innerText = `Words: ${words}`;
 
-        // Feedback visual del rango 50-60
-        if (words >= 50 && words <= 60) {
+        if (words >= 40 && words <= 60) {
             counter.className = 'word-counter count-good';
             counter.innerText = `Words: ${words} (Perfect!)`;
         } else if (words > 60) {
@@ -215,13 +212,12 @@
         const text = writingBox.value.trim();
         const words = text ? text.split(/\s+/).length : 0;
         
-        // Evitar entrega vacía
         if (words < 5) {
             alert("Please write your routine before submitting.");
             return;
         }
 
-        // Validación de Estructuras (Andamiaje)
+        // Validación de Estructuras
         const structures = [
             { id: 'Wake up', regex: /wake up at/i },
             { id: 'Go to', regex: /go to/i },
@@ -241,10 +237,9 @@
         });
         checklistHTML += '</ul>';
 
-        // Verificación de Longitud
-        const isLengthCorrect = (words >= 50 && words <= 60);
+        // Verificación de Longitud corregida a 40-60
+        const isLengthCorrect = (words >= 40 && words <= 60);
         
-        // Renderizar Feedback
         feedbackArea.style.display = 'block';
         if (isLengthCorrect && foundCount >= 4) {
             feedbackArea.className = 'success-report';
@@ -258,10 +253,10 @@
             feedbackArea.className = 'error-report';
             feedbackArea.innerHTML = `
                 <h3>⚠️ Needs Review</h3>
-                <p>Words: <strong>${words}</strong> (Goal: 50-60).</p>
+                <p>Words: <strong>${words}</strong> (Goal: 40-60).</p>
                 <p>Check the list below to see what is missing:</p>
                 ${checklistHTML}
-                <p><strong>Tip:</strong> Ensure you have at least 50 words and use the "because" structure.</p>
+                <p><strong>Tip:</strong> Ensure you have between 40 and 60 words and use the required structures.</p>
             `;
         }
 
