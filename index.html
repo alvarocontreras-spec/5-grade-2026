@@ -3,71 +3,96 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Writing Task: My Crazy Daily Routine</title>
+    <title>Writing Assessment: My Daily Routine</title>
     <style>
+        /* Estilos centrados en el estudiante - Minimalismo y Claridad */
         :root {
-            --primary: #6c5ce7;
-            --secondary: #00b894;
-            --error: #d63031;
-            --warning: #fdcb6e;
-            --bg: #f9f9fb;
+            --primary-blue: #2980b9;
+            --success-green: #27ae60;
+            --error-red: #e74c3c;
+            --warning-yellow: #f1c40f;
+            --bg-light: #f4f7f6;
+            --text-dark: #2c3e50;
         }
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--bg);
+            background-color: var(--bg-light);
+            color: var(--text-dark);
+            margin: 0;
             padding: 20px;
             display: flex;
             justify-content: center;
         }
 
         .container {
-            max-width: 750px;
+            max-width: 800px;
             width: 100%;
             background: white;
-            padding: 30px;
-            border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
         }
 
-        header { text-align: center; margin-bottom: 20px; border-bottom: 2px solid #eee; padding-bottom: 10px; }
+        header {
+            text-align: center;
+            border-bottom: 2px solid #eee;
+            margin-bottom: 25px;
+            padding-bottom: 10px;
+        }
 
-        .absurd-model {
-            background: #fff0f0;
-            border: 2px dashed #ff7675;
+        .objective {
+            background: #eef2f3;
             padding: 15px;
-            border-radius: 12px;
-            margin-bottom: 20px;
+            border-radius: 8px;
             font-size: 0.9rem;
-            color: #d63031;
-        }
-
-        .instruction-box {
-            background: #f0f3ff;
-            padding: 15px;
-            border-radius: 12px;
+            border-left: 5px solid var(--primary-blue);
             margin-bottom: 20px;
-            font-size: 0.95rem;
-            border-left: 5px solid var(--primary);
         }
 
-        .writing-wrapper { position: relative; }
+        .instruction-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+
+        .box {
+            padding: 15px;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            line-height: 1.4;
+        }
+
+        .instructions { background: #fff9db; border: 1px solid #f1c40f; }
+        .vocabulary { background: #e8f8f5; border: 1px solid #2ecc71; }
+        .model { background: #fdf2e9; border: 1px solid #e67e22; grid-column: span 2; }
+
+        .writing-zone {
+            position: relative;
+            margin-top: 20px;
+        }
 
         textarea {
             width: 100%;
-            height: 200px;
+            height: 220px;
             padding: 20px;
             font-size: 1.1rem;
             border: 2px solid #ddd;
-            border-radius: 15px;
+            border-radius: 12px;
             resize: none;
             box-sizing: border-box;
-            transition: 0.3s;
+            font-family: inherit;
+            transition: all 0.3s ease;
         }
 
-        textarea:focus { outline: none; border-color: var(--primary); }
+        textarea:focus {
+            outline: none;
+            border-color: var(--primary-blue);
+            box-shadow: 0 0 8px rgba(41, 128, 185, 0.2);
+        }
 
-        /* Contador Dinámico 50-60 */
+        /* Contador Dinámico sobre el Box */
         .word-counter {
             position: absolute;
             bottom: 15px;
@@ -78,34 +103,47 @@
             font-size: 0.8rem;
             background: #eee;
             color: #666;
-            transition: 0.3s;
+            transition: all 0.3s;
         }
 
-        .count-perfect { background: var(--secondary); color: white; transform: scale(1.1); }
-        .count-over { background: var(--error); color: white; }
+        .count-bad { color: var(--error-red); background: #fdeaea; }
+        .count-good { color: white; background: var(--success-green); transform: scale(1.05); }
 
         .btn-submit {
             width: 100%;
-            padding: 15px;
-            background: var(--primary);
+            padding: 16px;
+            background: var(--primary-blue);
             color: white;
             border: none;
             border-radius: 10px;
             font-size: 1.1rem;
             font-weight: bold;
             cursor: pointer;
-            margin-top: 15px;
+            margin-top: 20px;
+            transition: background 0.3s;
         }
 
-        #feedback {
-            margin-top: 20px;
+        .btn-submit:hover { background: #1a5276; }
+
+        #feedbackArea {
+            margin-top: 30px;
             padding: 20px;
             border-radius: 10px;
             display: none;
+            animation: fadeIn 0.5s ease;
         }
 
-        .success { background: #e3faf3; border: 1px solid var(--secondary); color: #084d3e; }
-        .retry { background: #fff5f5; border: 1px solid var(--error); color: #611a1a; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        .success-report { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .error-report { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+
+        .checklist {
+            margin-top: 10px;
+            font-size: 0.9rem;
+            list-style: none;
+            padding: 0;
+        }
     </style>
 </head>
 <body>
@@ -113,70 +151,121 @@
 <div class="container">
     <header>
         <h1>My Daily Routine</h1>
-        <p><strong>Learning Objective:</strong> Describe routines using Present Simple (A2).</p>
+        <p>A2 English Writing Task - 5th Year</p>
     </header>
 
-    <div class="absurd-model">
-        <strong>🚫 ABSURD MODEL (DO NOT COPY):</strong><br>
-        <em>"I wake up at 3:00 am. I go to Mars in the morning. I eat blue screws for lunch. In the afternoon, I play with my pet dragon. I like dragons because they breathe fire. I go to bed at noon."</em>
+    <div class="objective">
+        <strong>🎯 Goal:</strong> Talk about your daily routine. Use Present Simple to describe 5-6 actions.
     </div>
 
-    <div class="instruction-box">
-        <strong>📝 Your Task:</strong> Write your <u>real</u> routine. <br>
-        <strong>Rules:</strong> 50 - 60 words. Use: <em>"wake up at", "go to", "eat", "play", "like... because"</em>.
+    <div class="instruction-grid">
+        <div class="box instructions">
+            <strong>📝 Instructions:</strong>
+            <ul>
+                <li>Write 5–6 sentences.</li>
+                <li>Range: <strong>50 - 60 words</strong>.</li>
+                <li>Use: <em>and, but, because.</em></li>
+            </ul>
+        </div>
+        <div class="box vocabulary">
+            <strong>🧱 Vocabulary Box:</strong><br>
+            Morning, afternoon, night, lunch, school, home, study, watch TV, happy, fun.
+        </div>
+        <div class="box model">
+            <strong>📌 Model (Do not copy!):</strong><br>
+            <em>I wake up at 3:00 am. I go to Mars in the morning. I eat blue screws for lunch. In the afternoon, I play with my pet dragon. I like dragons because they breathe fire. I go to bed at noon.</em>
+        </div>
     </div>
 
-    <div class="writing-wrapper">
-        <textarea id="userInput" placeholder="I wake up at..."></textarea>
-        <div id="wordCount" class="word-counter">Words: 0</div>
+    <div class="writing-zone">
+        <textarea id="writingBox" placeholder="Start writing here using: I wake up at, I go to, I eat, I play..."></textarea>
+        <div id="counter" class="word-counter">Words: 0 / 50-60</div>
     </div>
 
-    <button class="btn-submit" onclick="checkWriting()">Submit Assessment</button>
+    <button class="btn-submit" onclick="evaluateProduction()">Submit Final Task</button>
 
-    <div id="feedback"></div>
+    <div id="feedbackArea"></div>
 </div>
 
 <script>
-    const input = document.getElementById('userInput');
-    const counter = document.getElementById('wordCount');
-    const feedback = document.getElementById('feedback');
+    const writingBox = document.getElementById('writingBox');
+    const counter = document.getElementById('counter');
+    const feedbackArea = document.getElementById('feedbackArea');
 
-    input.addEventListener('input', () => {
-        const words = input.value.trim().split(/\s+/).filter(w => w.length > 0).length;
+    // Lógica del contador en tiempo real
+    writingBox.addEventListener('input', () => {
+        const text = writingBox.value.trim();
+        const words = text ? text.split(/\s+/).length : 0;
+        
         counter.innerText = `Words: ${words}`;
 
-        counter.classList.remove('count-perfect', 'count-over');
+        // Feedback visual del rango 50-60
         if (words >= 50 && words <= 60) {
-            counter.classList.add('count-perfect');
-            counter.innerText = `Words: ${words} (PERFECT RANGE!)`;
+            counter.className = 'word-counter count-good';
+            counter.innerText = `Words: ${words} (Perfect!)`;
         } else if (words > 60) {
-            counter.classList.add('count-over');
-            counter.innerText = `Words: ${words} (TOO LONG)`;
+            counter.className = 'word-counter count-bad';
+            counter.innerText = `Words: ${words} (Too long)`;
+        } else {
+            counter.className = 'word-counter';
         }
     });
 
-    function checkWriting() {
-        const text = input.value.trim();
-        const words = text.split(/\s+/).filter(w => w.length > 0).length;
+    function evaluateProduction() {
+        const text = writingBox.value.trim();
+        const words = text ? text.split(/\s+/).length : 0;
         
-        // Anti-plagio del modelo absurdo
-        if (text.toLowerCase().includes("mars") || text.toLowerCase().includes("screws")) {
-            alert("⚠️ ERROR: Do not copy the Alien model! Use your own life.");
+        // Evitar entrega vacía
+        if (words < 5) {
+            alert("Please write your routine before submitting.");
             return;
         }
 
-        feedback.style.display = 'block';
+        // Validación de Estructuras (Andamiaje)
+        const structures = [
+            { id: 'Wake up', regex: /wake up at/i },
+            { id: 'Go to', regex: /go to/i },
+            { id: 'Eat', regex: /eat/i },
+            { id: 'Play', regex: /play/i },
+            { id: 'Like/Because', regex: /like.*because/i },
+            { id: 'Bedtime', regex: /go to bed at/i }
+        ];
+
+        let foundCount = 0;
+        let checklistHTML = '<ul class="checklist">';
         
-        if (words >= 50 && words <= 60) {
-            feedback.className = 'success';
-            feedback.innerHTML = `<h3>✅ Well done!</h3> You wrote ${words} words. Your text is within the required range.`;
+        structures.forEach(s => {
+            const isFound = s.regex.test(text);
+            if (isFound) foundCount++;
+            checklistHTML += `<li>${isFound ? '✅' : '❌'} Structure: "${s.id}"</li>`;
+        });
+        checklistHTML += '</ul>';
+
+        // Verificación de Longitud
+        const isLengthCorrect = (words >= 50 && words <= 60);
+        
+        // Renderizar Feedback
+        feedbackArea.style.display = 'block';
+        if (isLengthCorrect && foundCount >= 4) {
+            feedbackArea.className = 'success-report';
+            feedbackArea.innerHTML = `
+                <h3>🌟 Excellent Work!</h3>
+                <p>You followed the instructions. Your text has <strong>${words}</strong> words.</p>
+                ${checklistHTML}
+                <p><em>Great job using the mandatory structures!</em></p>
+            `;
         } else {
-            feedback.className = 'retry';
-            const message = words < 50 ? `You need ${50 - words} more words.` : `You need to delete ${words - 60} words.`;
-            feedback.innerHTML = `<h3>❌ Range not met</h3> You wrote ${words} words. ${message}`;
+            feedbackArea.className = 'error-report';
+            feedbackArea.innerHTML = `
+                <h3>⚠️ Needs Review</h3>
+                <p>Words: <strong>${words}</strong> (Goal: 50-60).</p>
+                <p>Check the list below to see what is missing:</p>
+                ${checklistHTML}
+                <p><strong>Tip:</strong> Ensure you have at least 50 words and use the "because" structure.</p>
+            `;
         }
-        
-        feedback.scrollIntoView({ behavior: 'smooth' });
+
+        feedbackArea.scrollIntoView({ behavior: 'smooth' });
     }
 </script>
 
