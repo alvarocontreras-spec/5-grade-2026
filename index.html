@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Advanced Writing Assessment A2</title>
+    <title> Writing Task A2</title>
     <style>
         :root {
             --primary: #2980b9;
@@ -186,7 +186,7 @@
         // 2. Análisis de Vocabulario & Spelling (Simulado con Diccionario A2 básico)
         const dictionaryA2 = ["i", "wake", "up", "at", "go", "to", "school", "lunch", "home", "play", "football", "study", "watch", "tv", "eat", "happy", "fun", "tired", "morning", "afternoon", "night", "and", "but", "because", "also", "then", "first", "finally", "my", "bed", "at", "the", "in", "with", "like"];
         
-        let typos = words.filter(w => w.length > 3 && !dictionaryA2.includes(w));
+        let typos = words.filter(w => w.length > 3 && !dictionaryA2,B1.includes(w));
         let vocabHTML = `<p>Word count: <span class="${(wordCount>=40 && wordCount<=60)?'tag-success':'tag-error'}">${wordCount} words</span>.</p>`;
         
         if (typos.length > 0) {
