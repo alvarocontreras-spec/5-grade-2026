@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Writing Assessment System</title>
+    <title>Writing Assessment: Daily Routine</title>
     <style>
         :root {
             --primary: #2980b9;
@@ -16,120 +16,49 @@
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--bg);
-            color: var(--text);
-            margin: 0;
-            padding: 20px;
-            display: flex;
-            justify-content: center;
+            background-color: var(--bg); color: var(--text);
+            margin: 0; padding: 20px; display: flex; justify-content: center;
         }
 
         .container {
-            max-width: 800px;
-            width: 100%;
-            background: white;
-            padding: 40px;
-            border-radius: 16px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            max-width: 800px; width: 100%; background: white;
+            padding: 40px; border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.08);
         }
 
         header { text-align: center; border-bottom: 2px solid #eee; margin-bottom: 25px; padding-bottom: 10px; }
 
         .student-info-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
-            gap: 10px;
-            margin-bottom: 20px;
+            display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 20px;
         }
 
-        input {
-            padding: 12px;
-            border: 2px solid #ddd;
-            border-radius: 8px;
-            font-size: 0.9rem;
-            width: 100%;
-            box-sizing: border-box;
-        }
+        input { padding: 12px; border: 2px solid #ddd; border-radius: 8px; width: 100%; box-sizing: border-box; }
 
-        .instruction-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-            margin-bottom: 20px;
-        }
-
+        .instruction-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px; }
         .box { padding: 15px; border-radius: 10px; font-size: 0.85rem; line-height: 1.4; }
         .instructions { background: #fff9db; border: 1px solid #f1c40f; }
         .vocabulary { background: #e8f8f5; border: 1px solid #2ecc71; }
         .model { background: #fdf2e9; border: 1px solid #e67e22; grid-column: span 2; color: #d35400; font-weight: 500; }
 
-        .writing-zone { position: relative; }
         textarea {
-            width: 100%;
-            height: 200px;
-            padding: 20px;
-            font-size: 1.1rem;
-            border: 2px solid #ddd;
-            border-radius: 12px;
-            resize: none;
-            box-sizing: border-box;
-            transition: 0.3s;
-            font-family: inherit;
+            width: 100%; height: 200px; padding: 20px; font-size: 1.1rem;
+            border: 2px solid #ddd; border-radius: 12px; resize: none; box-sizing: border-box;
         }
 
-        .word-counter {
-            position: absolute;
-            bottom: 15px;
-            right: 15px;
-            padding: 5px 12px;
-            border-radius: 20px;
-            font-weight: bold;
-            font-size: 0.8rem;
-            background: #eee;
-        }
-
-        /* Buttons Styling */
-        .button-group {
-            display: flex;
-            gap: 15px;
-            margin-top: 20px;
-        }
-
-        .btn {
-            flex: 1;
-            padding: 18px;
-            border: none;
-            border-radius: 10px;
-            font-size: 1.1rem;
-            font-weight: bold;
-            cursor: pointer;
-            transition: 0.3s;
-        }
-
+        .button-group { display: flex; gap: 15px; margin-top: 20px; }
+        .btn { flex: 1; padding: 18px; border: none; border-radius: 10px; font-size: 1.1rem; font-weight: bold; cursor: pointer; transition: 0.3s; }
         .btn-check { background: var(--warning); color: white; }
-        .btn-check:hover { background: #e67e22; }
-
         .btn-submit { background: var(--primary); color: white; display: none; }
-        .btn-submit:hover { background: #1a5276; }
-
         .btn:disabled { background: #bdc3c7; cursor: not-allowed; }
 
         #feedbackArea {
-            margin-top: 30px;
-            display: none;
-            padding: 25px;
-            border-radius: 12px;
-            background: #f9f9f9;
-            border: 2px solid #eee;
+            margin-top: 30px; display: none; padding: 25px; border-radius: 12px;
+            background: #f9f9f9; border: 2px solid #eee;
         }
 
-        .report-title { font-weight: bold; display: block; margin-top: 15px; margin-bottom: 8px; color: var(--primary); font-size: 1.1rem; }
-        .feedback-list { padding-left: 20px; margin: 0; }
-        .feedback-list li { margin-bottom: 8px; line-height: 1.4; }
+        .report-title { font-weight: bold; display: block; margin-top: 15px; color: var(--primary); }
+        .feedback-list { padding-left: 20px; }
         .improve { color: #d35400; font-weight: 600; }
         .correct { color: var(--success); font-weight: 600; }
-        
-        .hint-text { font-size: 0.9rem; color: #7f8c8d; font-style: italic; margin-top: 10px; text-align: center;}
     </style>
 </head>
 <body>
@@ -137,54 +66,116 @@
 <div class="container">
     <header>
         <h1>Writing Assessment: Daily Routine</h1>
-        <p>Follow the steps: Write, Check & Improve, and then Submit.</p>
+        <p>1. Write -> 2. Check Feedback -> 3. Final Submit</p>
     </header>
 
-    <div id="blockMessage" style="display:none; color: var(--error); text-align: center; font-weight: bold; margin-bottom: 20px; padding: 15px; border: 1px solid var(--error); border-radius: 8px; background-color: #fdeaea;">
-        ⚠️ You have already submitted this task.
+    <div id="blockMessage" style="display:none; color: var(--error); text-align: center; font-weight: bold; margin-bottom: 20px; padding: 15px; border: 1px solid var(--error); border-radius: 8px;">
+        ⚠️ Assignment already submitted.
     </div>
 
     <div class="student-info-grid">
-        <input type="text" id="firstName" placeholder="First Name" required>
-        <input type="text" id="lastName" placeholder="Last Name" required>
-        <input type="text" id="course" placeholder="Class / Grade" required>
+        <input type="text" id="firstName" placeholder="First Name">
+        <input type="text" id="lastName" placeholder="Last Name">
+        <input type="text" id="course" placeholder="Class">
     </div>
 
     <div class="instruction-grid">
-        <div class="box instructions"><strong>📝 Rules:</strong> 40-60 words. Use Present Simple and connectors.</div>
-        <div class="box vocabulary"><strong>🧱 Keywords:</strong> wake up, school, lunch, happy, study.</div>
-        <div class="box model">
-            <strong>🚫 Do Not Copy:</strong> <br>
-            "I wake up at 3:00 am and I go to Mars. I eat blue screws..." 
-        </div>
+        <div class="box instructions"><strong>📝 Task:</strong> 40-60 words. Use <strong>Present Simple</strong>.</div>
+        <div class="box vocabulary"><strong>🧱 Connectors:</strong> and, but, also, moreover, in addition.</div>
+        <div class="box model"><strong>🚫 Anti-Plagiarism:</strong> Do not use the "Mars/Robot" example.</div>
     </div>
 
-    <div class="writing-zone">
-        <textarea id="writingBox" placeholder="Write your daily routine here..."></textarea>
-        <div id="counter" class="word-counter">Words: 0 / 40-60</div>
-    </div>
-
+    <textarea id="writingBox" placeholder="Start writing your routine..."></textarea>
+    
     <div class="button-group">
-        <button id="checkBtn" class="btn btn-check" onclick="provideFeedback()">1. Get Feedback & Improve</button>
+        <button id="checkBtn" class="btn btn-check" onclick="provideFeedback()">1. Get Feedback</button>
         <button id="submitBtn" class="btn btn-submit" onclick="finalSubmission()">2. Submit Final Version</button>
     </div>
-    <p class="hint-text" id="hint">Check your text first to unlock the Submit button.</p>
 
     <div id="feedbackArea">
-        <h2 style="text-align: center; color: var(--text); border-bottom: 2px solid #ddd; padding-bottom: 10px;">Feedback Report</h2>
-        <div>
-            <span class="report-title">💡 Suggestions for improvement:</span>
-            <ul id="improveList" class="feedback-list"></ul>
-        </div>
-        <div>
-            <span class="report-title">✅ Strengths:</span>
-            <ul id="correctList" class="feedback-list"></ul>
-        </div>
+        <h2 style="text-align: center;">Your Progress</h2>
+        <span class="report-title">💡 Needs Improvement:</span>
+        <ul id="improveList" class="feedback-list"></ul>
+        <span class="report-title">✅ Well Done:</span>
+        <ul id="correctList" class="feedback-list"></ul>
     </div>
 </div>
 
 <script>
     const scriptURL = "https://script.google.com/macros/s/AKfycby-0PHNKPAI-eq766H9GF8aKQ5YDi5omxdx28s94LjnOxrQH7J5x-L6cw4YJGBP9wxxOQ/exec";
+
+    function provideFeedback() {
+        const text = document.getElementById('writingBox').value.trim();
+        const words = text.split(/\s+/).filter(w => w.length > 0);
+        
+        if (words.length < 10) return alert("Please write more before checking.");
+
+        // ANTI-PLAGIARISM
+        if (["mars", "screws", "robot"].some(w => text.toLowerCase().includes(w))) {
+            return alert("❌ Plagiarism detected! Write about your own life.");
+        }
+
+        const improve = [];
+        const correct = [];
+
+        // CONNECTOR CHECKING
+        const connectors = ["and", "but", "also", "moreover", "in addition"];
+        const foundConnectors = connectors.filter(c => new RegExp(`\\b${c}\\b`, 'i').test(text));
+
+        if (foundConnectors.length === 0) {
+            improve.push(`<span class="improve">Connectors:</span> Try using "and", "but", "also", "moreover" or "in addition" to link your ideas.`);
+        } else {
+            correct.push(`Great! You used these connectors: <strong>${foundConnectors.join(", ")}</strong>.`);
+            if (foundConnectors.length < 3) {
+                improve.push(`<span class="improve">Variety:</span> You used ${foundConnectors.length} connectors. Try using at least 3 for a higher score.`);
+            }
+        }
+
+        // GRAMMAR CHECKING
+        if (/\bI\s+wakes\b/i.test(text)) improve.push(`<span class="improve">Subject-Verb:</span> Use "I wake", not "I wakes".`);
+        if (/\bgo school\b/i.test(text)) improve.push(`<span class="improve">Prepositions:</span> Say "go TO school".`);
+
+        // WORD COUNT
+        if (words.length < 40 || words.length > 60) {
+            improve.push(`<span class="improve">Word Count:</span> You have ${words.length} words. Target is 40-60.`);
+        } else {
+            correct.push("Word count is within the required range.");
+        }
+
+        // DISPLAY FEEDBACK
+        document.getElementById('improveList').innerHTML = improve.map(i => `<li>${i}</li>`).join('') || "<li>Everything looks ready!</li>";
+        document.getElementById('correctList').innerHTML = correct.map(c => `<li>${c}</li>`).join('') || "<li>No strengths detected yet.</li>";
+        document.getElementById('feedbackArea').style.display = 'block';
+        
+        // UNLOCK SUBMIT
+        document.getElementById('submitBtn').style.display = 'block';
+        document.getElementById('feedbackArea').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    async function finalSubmission() {
+        const data = {
+            firstName: document.getElementById('firstName').value.trim(),
+            lastName: document.getElementById('lastName').value.trim(),
+            course: document.getElementById('course').value.trim(),
+            text: document.getElementById('writingBox').value.trim()
+        };
+
+        if (!data.firstName || !data.lastName || !data.course) return alert("Please fill in your info.");
+
+        const btn = document.getElementById('submitBtn');
+        btn.innerText = "Submitting...";
+        btn.disabled = true;
+
+        try {
+            await fetch(scriptURL, { method: 'POST', mode: 'no-cors', body: JSON.stringify(data) });
+            localStorage.setItem("assignment_completed", "true");
+            alert("✅ Submitted successfully!");
+            location.reload();
+        } catch (e) {
+            alert("Error submitting. Feedback is still visible.");
+            btn.disabled = false;
+        }
+    }
 
     window.onload = () => {
         if (localStorage.getItem("assignment_completed") === "true") {
@@ -192,85 +183,7 @@
             document.getElementById('blockMessage').style.display = 'block';
         }
     };
-
-    document.getElementById('writingBox').addEventListener('input', function() {
-        const words = this.value.trim().split(/\s+/).filter(w => w.length > 0).length;
-        const counter = document.getElementById('counter');
-        counter.innerText = `Words: ${words} / 40-60`;
-        counter.style.color = (words >= 40 && words <= 60) ? "var(--success)" : "var(--error)";
-    });
-
-    // STEP 1: ONLY FEEDBACK
-    function provideFeedback() {
-        const text = document.getElementById('writingBox').value.trim();
-        const words = text.split(/\s+/).filter(w => w.length > 0);
-
-        if (words.length < 10) return alert("Your text is too short to analyze.");
-
-        // PLAGIARISM CHECK
-        const forbidden = ["mars", "screws", "robot", "alien"];
-        if (forbidden.some(word => text.toLowerCase().includes(word))) {
-            return alert("❌ Example detected: Please write about your OWN routine, not the robot/Mars example.");
-        }
-
-        const improve = [];
-        const correct = [];
-
-        // Logic
-        if (words.length < 40 || words.length > 60) {
-            improve.push(`<span class="improve">Length:</span> Your text has ${words.length} words. Target is 40-60.`);
-        } else {
-            correct.push("Word count is perfect.");
-        }
-
-        if (/\bI\s+wakes\b/i.test(text)) improve.push(`<span class="improve">Grammar:</span> "I wake", not "I wakes".`);
-        if (/\bgo school\b/i.test(text)) improve.push(`<span class="improve">Structure:</span> Use "go TO school".`);
-        if (!/\b(and|but|because|then|finally)\b/i.test(text)) improve.push(`<span class="improve">Connectors:</span> Add 'then' or 'because' to connect ideas.`);
-        else correct.push("Good use of connectors.");
-
-        // Show Feedback
-        document.getElementById('improveList').innerHTML = improve.map(i => `<li>${i}</li>`).join('') || "<li>Everything looks good!</li>";
-        document.getElementById('correctList').innerHTML = correct.map(c => `<li>${c}</li>`).join('') || "<li>Keep going!</li>";
-        document.getElementById('feedbackArea').style.display = 'block';
-        
-        // UNLOCK SUBMIT BUTTON
-        document.getElementById('submitBtn').style.display = 'block';
-        document.getElementById('hint').innerText = "Now you can correct your text and click 'Submit' whenever you are ready.";
-        
-        document.getElementById('feedbackArea').scrollIntoView({ behavior: 'smooth' });
-    }
-
-    // STEP 2: ACTUAL SENDING
-    async function finalSubmission() {
-        const text = document.getElementById('writingBox').value.trim();
-        const fName = document.getElementById('firstName').value.trim();
-        const lName = document.getElementById('lastName').value.trim();
-        const course = document.getElementById('course').value.trim();
-
-        if (!fName || !lName || !course) return alert("Please fill in your name and class.");
-
-        if (!confirm("Are you sure? This is your final submission.")) return;
-
-        const btn = document.getElementById('submitBtn');
-        btn.innerText = "Sending...";
-        btn.disabled = true;
-
-        try {
-            await fetch(scriptURL, {
-                method: 'POST',
-                mode: 'no-cors',
-                body: JSON.stringify({ firstName: fName, lastName: lName, course: course, text: text }),
-                headers: { 'Content-Type': 'application/json' }
-            });
-            
-            localStorage.setItem("assignment_completed", "true");
-            alert("✅ Successfully submitted!");
-            location.reload();
-        } catch (e) {
-            alert("Submission error.");
-            btn.disabled = false;
-        }
-    }
 </script>
+
 </body>
 </html>
