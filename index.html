@@ -88,21 +88,31 @@
             background: #eee;
         }
 
-        .btn-submit {
-            width: 100%;
+        /* Buttons Styling */
+        .button-group {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .btn {
+            flex: 1;
             padding: 18px;
-            background: var(--primary);
-            color: white;
             border: none;
             border-radius: 10px;
             font-size: 1.1rem;
             font-weight: bold;
             cursor: pointer;
-            margin-top: 20px;
             transition: 0.3s;
         }
 
-        .btn-submit:disabled { background: #bdc3c7; cursor: not-allowed; }
+        .btn-check { background: var(--warning); color: white; }
+        .btn-check:hover { background: #e67e22; }
+
+        .btn-submit { background: var(--primary); color: white; display: none; }
+        .btn-submit:hover { background: #1a5276; }
+
+        .btn:disabled { background: #bdc3c7; cursor: not-allowed; }
 
         #feedbackArea {
             margin-top: 30px;
@@ -118,6 +128,8 @@
         .feedback-list li { margin-bottom: 8px; line-height: 1.4; }
         .improve { color: #d35400; font-weight: 600; }
         .correct { color: var(--success); font-weight: 600; }
+        
+        .hint-text { font-size: 0.9rem; color: #7f8c8d; font-style: italic; margin-top: 10px; text-align: center;}
     </style>
 </head>
 <body>
@@ -125,11 +137,11 @@
 <div class="container">
     <header>
         <h1>Writing Assessment: Daily Routine</h1>
-        <p>Please enter your details and complete the writing task.</p>
+        <p>Follow the steps: Write, Check & Improve, and then Submit.</p>
     </header>
 
     <div id="blockMessage" style="display:none; color: var(--error); text-align: center; font-weight: bold; margin-bottom: 20px; padding: 15px; border: 1px solid var(--error); border-radius: 8px; background-color: #fdeaea;">
-        ⚠️ You have already submitted this task. Only one submission is allowed per student.
+        ⚠️ You have already submitted this task.
     </div>
 
     <div class="student-info-grid">
@@ -139,11 +151,11 @@
     </div>
 
     <div class="instruction-grid">
-        <div class="box instructions"><strong>📝 Rules:</strong> 40-60 words. Use Present Simple and connectors (and, but, because).</div>
-        <div class="box vocabulary"><strong>🧱 Keywords:</strong> wake up, school, lunch, happy, study, then.</div>
+        <div class="box instructions"><strong>📝 Rules:</strong> 40-60 words. Use Present Simple and connectors.</div>
+        <div class="box vocabulary"><strong>🧱 Keywords:</strong> wake up, school, lunch, happy, study.</div>
         <div class="box model">
-            <strong>🚫 Absurd Example (DO NOT COPY):</strong> <br>
-            "I wake up at 3:00 am and I go to Mars. I eat blue screws for lunch because I am a robot..." 
+            <strong>🚫 Do Not Copy:</strong> <br>
+            "I wake up at 3:00 am and I go to Mars. I eat blue screws..." 
         </div>
     </div>
 
@@ -152,7 +164,11 @@
         <div id="counter" class="word-counter">Words: 0 / 40-60</div>
     </div>
 
-    <button id="submitBtn" class="btn-submit" onclick="processSubmission()">Submit & View Feedback</button>
+    <div class="button-group">
+        <button id="checkBtn" class="btn btn-check" onclick="provideFeedback()">1. Get Feedback & Improve</button>
+        <button id="submitBtn" class="btn btn-submit" onclick="finalSubmission()">2. Submit Final Version</button>
+    </div>
+    <p class="hint-text" id="hint">Check your text first to unlock the Submit button.</p>
 
     <div id="feedbackArea">
         <h2 style="text-align: center; color: var(--text); border-bottom: 2px solid #ddd; padding-bottom: 10px;">Feedback Report</h2>
@@ -172,8 +188,7 @@
 
     window.onload = () => {
         if (localStorage.getItem("assignment_completed") === "true") {
-            document.getElementById('submitBtn').disabled = true;
-            document.getElementById('writingBox').disabled = true;
+            document.querySelectorAll('input, textarea, button').forEach(el => el.disabled = true);
             document.getElementById('blockMessage').style.display = 'block';
         }
     };
@@ -185,47 +200,59 @@
         counter.style.color = (words >= 40 && words <= 60) ? "var(--success)" : "var(--error)";
     });
 
-    async function processSubmission() {
+    // STEP 1: ONLY FEEDBACK
+    function provideFeedback() {
         const text = document.getElementById('writingBox').value.trim();
-        const fName = document.getElementById('firstName').value.trim();
-        const lName = document.getElementById('lastName').value.trim();
-        const course = document.getElementById('course').value.trim();
         const words = text.split(/\s+/).filter(w => w.length > 0);
 
-        if (!fName || !lName || !course || !text) return alert("Please fill in all the fields.");
-        if (words.length < 10) return alert("Your text is too short.");
+        if (words.length < 10) return alert("Your text is too short to analyze.");
 
         // PLAGIARISM CHECK
-        const forbidden = ["mars", "screws", "robot", "alien", "blue screws"];
+        const forbidden = ["mars", "screws", "robot", "alien"];
         if (forbidden.some(word => text.toLowerCase().includes(word))) {
-            return alert("❌ PLAGIARISM DETECTED: Please write your own real routine. Do not use the Mars or screws example.");
+            return alert("❌ Example detected: Please write about your OWN routine, not the robot/Mars example.");
         }
 
         const improve = [];
         const correct = [];
 
-        // Analysis Logic
+        // Logic
         if (words.length < 40 || words.length > 60) {
-            improve.push(`<span class="improve">Length:</span> Your text has ${words.length} words. Aim for 40-60.`);
+            improve.push(`<span class="improve">Length:</span> Your text has ${words.length} words. Target is 40-60.`);
         } else {
-            correct.push("Great job! You met the required word count.");
+            correct.push("Word count is perfect.");
         }
 
-        if (/\bI\s+wakes\b/i.test(text)) improve.push(`<span class="improve">Grammar:</span> Use "I wake", not "wakes".`);
-        if (/\bgo school\b/i.test(text)) improve.push(`<span class="improve">Structure:</span> Remember to use "go TO school".`);
-        if (!/\b(and|but|because|then|finally)\b/i.test(text)) improve.push(`<span class="improve">Connectors:</span> Try using linking words (and, but, then).`);
-        else correct.push("Good use of connectors to link your ideas.");
+        if (/\bI\s+wakes\b/i.test(text)) improve.push(`<span class="improve">Grammar:</span> "I wake", not "I wakes".`);
+        if (/\bgo school\b/i.test(text)) improve.push(`<span class="improve">Structure:</span> Use "go TO school".`);
+        if (!/\b(and|but|because|then|finally)\b/i.test(text)) improve.push(`<span class="improve">Connectors:</span> Add 'then' or 'because' to connect ideas.`);
+        else correct.push("Good use of connectors.");
 
-        if (/\b(morning|afternoon|night|evening)\b/i.test(text)) correct.push("Nice use of time expressions.");
-        else improve.push(`<span class="improve">Vocabulary:</span> You could include times of the day (in the morning, at night, etc.).`);
-
-        // Render Feedback
-        document.getElementById('improveList').innerHTML = improve.map(i => `<li>${i}</li>`).join('') || "<li>Well done! No critical errors detected.</li>";
-        document.getElementById('correctList').innerHTML = correct.map(c => `<li>${c}</li>`).join('') || "<li>Keep practicing to keep improving.</li>";
+        // Show Feedback
+        document.getElementById('improveList').innerHTML = improve.map(i => `<li>${i}</li>`).join('') || "<li>Everything looks good!</li>";
+        document.getElementById('correctList').innerHTML = correct.map(c => `<li>${c}</li>`).join('') || "<li>Keep going!</li>";
         document.getElementById('feedbackArea').style.display = 'block';
+        
+        // UNLOCK SUBMIT BUTTON
+        document.getElementById('submitBtn').style.display = 'block';
+        document.getElementById('hint').innerText = "Now you can correct your text and click 'Submit' whenever you are ready.";
+        
+        document.getElementById('feedbackArea').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    // STEP 2: ACTUAL SENDING
+    async function finalSubmission() {
+        const text = document.getElementById('writingBox').value.trim();
+        const fName = document.getElementById('firstName').value.trim();
+        const lName = document.getElementById('lastName').value.trim();
+        const course = document.getElementById('course').value.trim();
+
+        if (!fName || !lName || !course) return alert("Please fill in your name and class.");
+
+        if (!confirm("Are you sure? This is your final submission.")) return;
 
         const btn = document.getElementById('submitBtn');
-        btn.innerText = "Submitting...";
+        btn.innerText = "Sending...";
         btn.disabled = true;
 
         try {
@@ -237,17 +264,13 @@
             });
             
             localStorage.setItem("assignment_completed", "true");
-            alert("✅ Task successfully submitted to your teacher!");
-            btn.innerText = "Task Submitted";
+            alert("✅ Successfully submitted!");
+            location.reload();
         } catch (e) {
-            alert("Error saving to Drive. However, you can see your feedback below.");
+            alert("Submission error.");
             btn.disabled = false;
-            btn.innerText = "Retry Submission";
         }
-        
-        document.getElementById('feedbackArea').scrollIntoView({ behavior: 'smooth' });
     }
 </script>
-
 </body>
 </html>
