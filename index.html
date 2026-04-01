@@ -11,6 +11,7 @@
             --error: #e74c3c;
             --warning: #f39c12;
             --bg: #f4f7f6;
+            --text: #2c3e50;
         }
 
         body {
@@ -75,27 +76,34 @@
     <div class="student-info-grid">
         <input type="text" id="firstName" placeholder="First Name">
         <input type="text" id="lastName" placeholder="Last Name">
-        <input type="text" id="course" placeholder="Class">
+        <input type="text" id="course" placeholder="Class / Grade">
     </div>
 
     <div class="instruction-grid">
         <div class="box instructions"><strong>📝 Task:</strong> 40-60 words. Use <strong>Present Simple</strong>.</div>
-        <div class="box vocabulary"><strong>🧱 Connectors:</strong> and, but, also, moreover, in addition.</div>
-        <div class="box model"><strong>🚫 Anti-Plagiarism:</strong> Do not use the example"I wake up at 3:00 am and I go to Mars. I eat blue screws for lunch because I am a robot..."</div>
+        <div class="box vocabulary">
+            <strong>🧱 Keywords & Connectors:</strong> <br>
+            wake up, school, lunch, happy, study. <br>
+            <em>and, but, also, moreover, in addition.</em>
+        </div>
+        <div class="box model">
+            <strong>🚫 Absurd Example (DO NOT COPY):</strong> <br>
+            "I wake up at 3:00 am and I go to Mars. I eat blue screws for lunch because I am a robot..." 
+        </div>
     </div>
 
-    <textarea id="writingBox" placeholder="Start writing your routine..."></textarea>
+    <textarea id="writingBox" placeholder="Start writing your routine here..."></textarea>
     
     <div class="button-group">
-        <button id="checkBtn" class="btn btn-check" onclick="provideFeedback()">1. Get Feedback</button>
+        <button id="checkBtn" class="btn btn-check" onclick="provideFeedback()">1. Get Feedback & Improve</button>
         <button id="submitBtn" class="btn btn-submit" onclick="finalSubmission()">2. Submit Final Version</button>
     </div>
 
     <div id="feedbackArea">
-        <h2 style="text-align: center;">Your Progress</h2>
-        <span class="report-title">💡 Needs Improvement:</span>
+        <h2 style="text-align: center; border-bottom: 2px solid #ddd; padding-bottom: 10px;">Feedback Report</h2>
+        <span class="report-title">💡 Suggestions for improvement:</span>
         <ul id="improveList" class="feedback-list"></ul>
-        <span class="report-title">✅ Well Done:</span>
+        <span class="report-title">✅ Well done:</span>
         <ul id="correctList" class="feedback-list"></ul>
     </div>
 </div>
@@ -109,9 +117,10 @@
         
         if (words.length < 10) return alert("Please write more before checking.");
 
-        // ANTI-PLAGIARISM
-        if (["mars", "screws", "robot"].some(w => text.toLowerCase().includes(w))) {
-            return alert("❌ Plagiarism detected! Write about your own life.");
+        // ANTI-PLAGIARISM CHECK
+        const forbidden = ["mars", "screws", "robot", "alien"];
+        if (forbidden.some(w => text.toLowerCase().includes(w))) {
+            return alert("❌ Plagiarism detected! Please write about your OWN routine, not the Mars example.");
         }
 
         const improve = [];
@@ -122,31 +131,31 @@
         const foundConnectors = connectors.filter(c => new RegExp(`\\b${c}\\b`, 'i').test(text));
 
         if (foundConnectors.length === 0) {
-            improve.push(`<span class="improve">Connectors:</span> Try using "and", "but", "also", "moreover" or "in addition" to link your ideas.`);
+            improve.push(`<span class="improve">Connectors:</span> Use linking words like "and", "but", "also", "moreover", or "in addition".`);
         } else {
             correct.push(`Great! You used these connectors: <strong>${foundConnectors.join(", ")}</strong>.`);
             if (foundConnectors.length < 3) {
-                improve.push(`<span class="improve">Variety:</span> You used ${foundConnectors.length} connectors. Try using at least 3 for a higher score.`);
+                improve.push(`<span class="improve">Variety:</span> Try to use at least 3 different connectors for better flow.`);
             }
         }
 
-        // GRAMMAR CHECKING
-        if (/\bI\s+wakes\b/i.test(text)) improve.push(`<span class="improve">Subject-Verb:</span> Use "I wake", not "I wakes".`);
+        // GRAMMAR & STRUCTURE
+        if (/\bI\s+wakes\b/i.test(text)) improve.push(`<span class="improve">Grammar:</span> Remember: "I wake", not "I wakes".`);
         if (/\bgo school\b/i.test(text)) improve.push(`<span class="improve">Prepositions:</span> Say "go TO school".`);
 
         // WORD COUNT
         if (words.length < 40 || words.length > 60) {
-            improve.push(`<span class="improve">Word Count:</span> You have ${words.length} words. Target is 40-60.`);
+            improve.push(`<span class="improve">Length:</span> Your text has ${words.length} words. Aim for 40-60.`);
         } else {
             correct.push("Word count is within the required range.");
         }
 
         // DISPLAY FEEDBACK
-        document.getElementById('improveList').innerHTML = improve.map(i => `<li>${i}</li>`).join('') || "<li>Everything looks ready!</li>";
-        document.getElementById('correctList').innerHTML = correct.map(c => `<li>${c}</li>`).join('') || "<li>No strengths detected yet.</li>";
+        document.getElementById('improveList').innerHTML = improve.map(i => `<li>${i}</li>`).join('') || "<li>No major errors detected. Ready to submit!</li>";
+        document.getElementById('correctList').innerHTML = correct.map(c => `<li>${c}</li>`).join('') || "<li>Keep writing to show your strengths.</li>";
         document.getElementById('feedbackArea').style.display = 'block';
         
-        // UNLOCK SUBMIT
+        // UNLOCK SUBMIT BUTTON
         document.getElementById('submitBtn').style.display = 'block';
         document.getElementById('feedbackArea').scrollIntoView({ behavior: 'smooth' });
     }
@@ -159,20 +168,21 @@
             text: document.getElementById('writingBox').value.trim()
         };
 
-        if (!data.firstName || !data.lastName || !data.course) return alert("Please fill in your info.");
+        if (!data.firstName || !data.lastName || !data.course) return alert("Please fill in your personal information.");
 
         const btn = document.getElementById('submitBtn');
-        btn.innerText = "Submitting...";
+        btn.innerText = "Submitting Final Version...";
         btn.disabled = true;
 
         try {
             await fetch(scriptURL, { method: 'POST', mode: 'no-cors', body: JSON.stringify(data) });
             localStorage.setItem("assignment_completed", "true");
-            alert("✅ Submitted successfully!");
+            alert("✅ Assignment successfully submitted!");
             location.reload();
         } catch (e) {
-            alert("Error submitting. Feedback is still visible.");
+            alert("Error submitting. Please try again.");
             btn.disabled = false;
+            btn.innerText = "2. Submit Final Version";
         }
     }
 
