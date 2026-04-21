@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -78,7 +78,7 @@
 <div class="container">
     <header>
         <h1>WRITING TASK II: DAILY ROUTINE</h1>
-        <p style="margin: 5px 0; font-size: 0.9rem; color: #7f8c8d;">Select your name, write (40-60 words) and check feedback.</p>
+        <p style="margin: 5px 0; font-size: 0.9rem; color: #7f8c8d;">Select your class and name, write (40-60 words) and get feedback.</p>
     </header>
 
     <div id="blockMessage">⚠️ You have already submitted this task.</div>
@@ -119,7 +119,7 @@
     
     <div class="button-group">
         <button id="checkBtn" class="btn btn-check" onclick="provideFeedback()">1. Get Feedback & Improve</button>
-        <button id="submitBtn" class="btn btn-submit" onclick="finalSubmission()">2. Submit Final Version</button>
+        <button id="submitBtn" class="btn btn-submit" onclick="finalSubmission()">2. Submit & Download Word</button>
     </div>
 
     <div id="feedbackArea">
@@ -132,7 +132,7 @@
 </div>
 
 <script>
-    const scriptURL = "https://script.google.com/macros/s/AKfycbwK4vsNOAqu_ezfn3Kl6DjN0NDEi0S-0LhM1Vm1lZ3sBsdn_R87hRCUl9cXd189Zdw3oA/exec";
+    const scriptURL = "https://script.google.com/macros/s/AKfycbyxUZYD8cFFTZpI-5vjWtroFLLm-cA_ZpIszHIdG52YmsUfgJjEmrIVw31zDeGFfkGqEw/exec";
 
     const database = {
         "5thA": ["ARANEDA SEPÚLVEDA MATÍAS SANTIAGO", "AYALA OLIVARES MÁXIMO ALONSO", "CAMPUSANO PÉREZ ISIDORA MONTSERRAT", "CANESSA VEGA BERNARDO FRANCISCO", "CARRASCO RAMÍREZ JAVIERA PAZ", "CHAMORRO SAN MARTÍN SEBASTIÁN FRANCISCO", "CORREA LEAL SANTIAGO LEÓN", "CUKIC LUENGO BRUNO EDUARDO", "ESPINOZA OLIVARES LUCAS ALEJANDRO", "FERNÁNDEZ ESCOBAR MARTÍN FELIPE", "FERNÁNDEZ RODRIGUEZ FERNANDA NICOLE", "GARNIER VELÁSQUEZ MAXIMILIANO LORENZO", "GARZON MACUER AMANDA SOFÍA", "GONZÁLEZ ARRIAGADA SOFÍA ISIDORA", "IBARRA BARRAZA DOMINGA PAZ", "JARAMILLO CANALES JULIETA ANTONIA", "JIMÉNEZ MONSALVES FERNANDA PAZ", "MACUADA GONZÁLEZ TOMÁS ALONSO", "MEZA MISTO FRANCISCA IGNACIA", "MUÑOZ OLIVOS SOFÍA ANTONIA", "NECULQUEO MURA JAVIER MATIAS", "OSORIO MUÑOZ LUCIANO", "PARRA ALIAGA AGUSTÍN CLEMENTE LEÓN", "RIQUELME CONTRERAS JULIETA ISADORA", "SALINAS SAAVEDRA EMILIANO IGNACIO", "SÁNCHEZ MORAGA NICOLÁS ARTURO", "SEISDEDOS CARVAJAL ANGELA GUADALUPE", "SEREY VALDES RENATO CLEMENTE", "SEYMOUR REYES TRINIDAD EMILIA", "VALLEJOS NAVARRO JOSEFA AGUSTINA", "VELOSO MUÑOZ ISABELLA AMARAL", "VERGARA FUENZALIDA JOAQUÍN IGNACIO", "VERGARA MARÍN DAMIÁN ALONSO", "VINES ZÚÑIGA DAMIÁN ALBERTO", "ZURITA BUSTOS ANTONIA INÉS"],
@@ -202,15 +202,25 @@
         document.getElementById('feedbackArea').scrollIntoView({ behavior: 'smooth' });
     }
 
-    function downloadAsWord(fullName, course, text) {
+    // FUNCIÓN PARA GENERAR EL WORD LOCAL
+    function downloadLocalWord(fullName, course, text) {
         const header = "<html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'><head><meta charset='utf-8'></head><body>";
         const footer = "</body></html>";
-        const content = `<h2>WRITING TASK II: DAILY ROUTINE</h2><p><b>Student:</b> ${fullName}</p><p><b>Class:</b> ${course}</p><hr><p>${text.replace(/\n/g, '<br>')}</p>`;
+        const content = `
+            <h2>WRITING TASK II: DAILY ROUTINE</h2>
+            <p><b>Student:</b> ${fullName}</p>
+            <p><b>Class:</b> ${course}</p>
+            <hr>
+            <p style="font-size:12pt; font-family:Arial;">${text.replace(/\n/g, '<br>')}</p>
+        `;
         const blob = new Blob(['\ufeff', header + content + footer], { type: 'application/msword' });
+        const url = URL.createObjectURL(blob);
         const link = document.createElement("a");
-        link.href = URL.createObjectURL(blob);
+        link.href = url;
         link.download = `${course}_${fullName.replace(/ /g, '_')}.doc`;
+        document.body.appendChild(link);
         link.click();
+        document.body.removeChild(link);
     }
 
     async function finalSubmission() {
@@ -219,20 +229,32 @@
         const course = document.getElementById('courseSelect').value;
 
         if (!fullName || !course || !text) return alert("Please select your class, name and write your text.");
-        if (!confirm("Confirm Final Submission?")) return;
+        if (!confirm("Confirm Final Submission? This will download your Word file and send a copy to the teacher.")) return;
 
         const btn = document.getElementById('submitBtn');
         btn.innerText = "Submitting..."; btn.disabled = true;
 
         try {
-            await fetch(scriptURL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ firstName: fullName, lastName: "", course: course, text: text }) });
-            downloadAsWord(fullName, course, text);
+            // 1. ENVÍO AL DRIVE DEL PROFESOR
+            await fetch(scriptURL, { 
+                method: 'POST', 
+                mode: 'no-cors', 
+                body: JSON.stringify({ 
+                    firstName: fullName, 
+                    course: course, 
+                    text: text 
+                }) 
+            });
+            
+            // 2. DESCARGA DEL WORD PARA EL ALUMNO
+            downloadLocalWord(fullName, course, text);
+
             localStorage.setItem("assignment_completed", "true");
-            alert("✅ Submitted! Word document downloaded.");
+            alert("✅ SUCCESS!\n1. Copy sent to Teacher's Drive.\n2. Word file downloaded for your Classroom.");
             location.reload();
         } catch (e) {
-            alert("Error submitting. Try again.");
-            btn.disabled = false; btn.innerText = "Submit Final Version";
+            alert("Error submitting. Please try again.");
+            btn.disabled = false; btn.innerText = "Submit & Download Word";
         }
     }
 </script>
